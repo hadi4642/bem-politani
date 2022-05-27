@@ -77,8 +77,8 @@
                             <td>:</td>
                             <td>
                                 @foreach ($notas as $nota)
-                                    <a href="{{ asset('storage/dokumentasi_nota/'.$nota->filename) }}" target="_blank">
-                                        <img src="{{ asset('storage/dokumentasi_nota/'.$nota->filename) }}" width="200" class="rounded">
+                                    <a href="{{ asset('dokumentasi_nota/'.$nota->filename) }}" target="_blank">
+                                        <img src="{{ asset('dokumentasi_nota/'.$nota->filename) }}" width="200" class="rounded">
                                     </a>
                                 @endforeach
                             </td>
@@ -88,8 +88,8 @@
                             <td>:</td>
                             <td>
                                 @foreach ($dok_kegiatan as $item)
-                                    <a href="{{ asset('storage/dokumentasi_kegiatan/'.$item->filename) }}" target="_blank">
-                                        <img src="{{ asset('storage/dokumentasi_kegiatan/'.$item->filename) }}" width="200" class="rounded">
+                                    <a href="{{ asset('dokumentasi_kegiatan/'.$item->filename) }}" target="_blank">
+                                        <img src="{{ asset('dokumentasi_kegiatan/'.$item->filename) }}" width="200" class="rounded">
                                     </a>
                                 @endforeach
                             </td>

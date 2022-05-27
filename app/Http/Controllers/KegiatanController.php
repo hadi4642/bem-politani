@@ -60,7 +60,8 @@ class KegiatanController extends Controller
 
             foreach($notas as $nota) {
                 $filename = date('YmdHis').'_'.$nota->getClientOriginalName();
-                $nota->storeAs('public/dokumentasi_nota', $filename);
+                $path = public_path('dokumentasi_nota');
+                $nota->move($path, $filename);
                 DokumentasiNota::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
             }
         }
@@ -71,7 +72,8 @@ class KegiatanController extends Controller
 
             foreach($kegiatans as $kegiatann) {
                 $filename = date('YmdHis').'_'.$kegiatann->getClientOriginalName();
-                $kegiatann->storeAs('public/dokumentasi_kegiatan', $filename);
+                $path = public_path('dokumentasi_kegiatan');
+                $kegiatann->move($path, $filename);
                 DokumentasiKegiatan::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
             }
         }
@@ -125,7 +127,7 @@ class KegiatanController extends Controller
             $notas2 = DokumentasiNota::where('kegiatan_id', $kegiatan->id)->get();
             foreach($notas2 as $nota) {
                 $nota->delete();
-                $image_path = public_path('storage/dokumentasi_nota/'.$nota->filename);
+                $image_path = public_path('dokumentasi_nota/'.$nota->filename);
                 if(file_exists($image_path)) {
                     unlink($image_path);
                 }
@@ -134,7 +136,8 @@ class KegiatanController extends Controller
             $notas = $request->file('dokumentasi_nota');
             foreach($notas as $nota) {
                 $filename = date('YmdHis').'_'.$nota->getClientOriginalName();
-                $nota->storeAs('public/dokumentasi_nota', $filename);
+                $path = public_path('dokumentasi_nota');
+                $nota->move($path, $filename);
                 DokumentasiNota::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
             }
         }
@@ -145,7 +148,7 @@ class KegiatanController extends Controller
             $kegiatans2 = DokumentasiKegiatan::where('kegiatan_id', $kegiatan->id)->get();
             foreach($kegiatans2 as $kegiatann) {
                 $kegiatann->delete();
-                $image_path = public_path('storage/dokumentasi_kegiatan/'.$kegiatann->filename);
+                $image_path = public_path('dokumentasi_kegiatan/'.$kegiatann->filename);
                 if(file_exists($image_path)) {
                     unlink($image_path);
                 }
@@ -154,7 +157,8 @@ class KegiatanController extends Controller
             $kegiatans = $request->file('dokumentasi_kegiatan');
             foreach($kegiatans as $kegiatann) {
                 $filename = date('YmdHis').'_'.$kegiatann->getClientOriginalName();
-                $kegiatann->storeAs('public/dokumentasi_kegiatan', $filename);
+                $path = public_path('dokumentasi_kegiatan');
+                $kegiatann->move($path, $filename);
                 DokumentasiKegiatan::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
             }
         }
@@ -168,7 +172,7 @@ class KegiatanController extends Controller
         $notas = DokumentasiNota::where('kegiatan_id', $kegiatan->id)->get();
         foreach($notas as $nota) {
             $nota->delete();
-            $image_path = public_path('storage/dokumentasi_nota/'.$nota->filename);
+            $image_path = public_path('dokumentasi_nota/'.$nota->filename);
             if(file_exists($image_path)) {
                 unlink($image_path);
             }
@@ -176,7 +180,7 @@ class KegiatanController extends Controller
         $kegiatans = DokumentasiKegiatan::where('kegiatan_id', $kegiatan->id)->get();
         foreach($kegiatans as $kegiatann) {
             $kegiatann->delete();
-            $image_path = public_path('storage/dokumentasi_kegiatan/'.$kegiatann->filename);
+            $image_path = public_path('dokumentasi_kegiatan/'.$kegiatann->filename);
             if(file_exists($image_path)) {
                 unlink($image_path);
             }
