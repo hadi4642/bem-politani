@@ -90,14 +90,14 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="dokumentasi_nota">Dokumentasi Nota</label>
+                        <label for="dokumentasi_nota">Dokumentasi Nota</label><span class="text-danger" style="font-size: 10px;"><i> *Kosongkan kolom jika tidak ingin merubah gambar</i></span>
                         <input class="form-control" type="file" id="dokumentasi_nota" name="dokumentasi_nota[]" multiple>
                         @error('dokumentasi_nota')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="dokumentasi_kegiatan">Dokumentasi Kegiatan</label>
+                        <label for="dokumentasi_kegiatan">Dokumentasi Kegiatan</label><span class="text-danger" style="font-size: 10px;"><i> *Kosongkan kolom jika tidak ingin merubah gambar</i></span>
                         <input class="form-control" type="file" id="dokumentasi_kegiatan" name="dokumentasi_kegiatan[]" multiple>
                         @error('dokumentasi_kegiatan')
                             <span class="text-danger">{{ $message }}</span>

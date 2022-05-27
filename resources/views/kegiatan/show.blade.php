@@ -25,14 +25,6 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                {{-- <div class="mb-3">
-                    <h5>Nama Kegiatan : </h5>
-                    <span>{{ $kegiatan->nama_kegiatan }}</span>
-                </div>
-                <div class="mb-3">
-                    <h5>Tema Kegiatan : </h5>
-                    <span>{{ $kegiatan->tema_kegiatan }}</span>
-                </div> --}}
                 <table class="table table-borderless">
                     <tbody>
                         <tr>

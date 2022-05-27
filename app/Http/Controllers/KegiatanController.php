@@ -59,7 +59,7 @@ class KegiatanController extends Controller
             $notas = $request->file('dokumentasi_nota');
 
             foreach($notas as $nota) {
-                $filename = date('YmdHis').''.$nota->getClientOriginalName();
+                $filename = date('YmdHis').'_'.$nota->getClientOriginalName();
                 $nota->storeAs('public/dokumentasi_nota', $filename);
                 DokumentasiNota::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
             }
@@ -70,7 +70,7 @@ class KegiatanController extends Controller
             $kegiatans = $request->file('dokumentasi_kegiatan');
 
             foreach($kegiatans as $kegiatann) {
-                $filename = date('YmdHis').''.$kegiatann->getClientOriginalName();
+                $filename = date('YmdHis').'_'.$kegiatann->getClientOriginalName();
                 $kegiatann->storeAs('public/dokumentasi_kegiatan', $filename);
                 DokumentasiKegiatan::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
             }
@@ -133,7 +133,7 @@ class KegiatanController extends Controller
             // Insert Gambar Baru
             $notas = $request->file('dokumentasi_nota');
             foreach($notas as $nota) {
-                $filename = date('YmdHis').''.$nota->getClientOriginalName();
+                $filename = date('YmdHis').'_'.$nota->getClientOriginalName();
                 $nota->storeAs('public/dokumentasi_nota', $filename);
                 DokumentasiNota::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
             }
@@ -153,7 +153,7 @@ class KegiatanController extends Controller
             // Insert Gambar Baru
             $kegiatans = $request->file('dokumentasi_kegiatan');
             foreach($kegiatans as $kegiatann) {
-                $filename = date('YmdHis').''.$kegiatann->getClientOriginalName();
+                $filename = date('YmdHis').'_'.$kegiatann->getClientOriginalName();
                 $kegiatann->storeAs('public/dokumentasi_kegiatan', $filename);
                 DokumentasiKegiatan::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
             }

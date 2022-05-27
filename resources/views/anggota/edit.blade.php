@@ -99,7 +99,7 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="password">Password</label>
+                        <label for="password">Password</label><span class="text-danger" style="font-size: 10px;"><i> *Kosongkan kolom jika tidak ingin merubah password</i></span>
                         <input class="form-control" type="password" id="password" name="password">
                         @error('password')
                             <span class="text-danger">{{ $message }}</span>
