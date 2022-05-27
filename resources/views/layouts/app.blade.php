@@ -9,6 +9,9 @@
 
     <title>@yield('title') - BEM Politani</title>
 
+    <link rel="shortcut icon" href="{{ asset('assets/images/politani.png') }}">
+
+    {{-- bootstrap --}}
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <!-- Bootstrap Css -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
