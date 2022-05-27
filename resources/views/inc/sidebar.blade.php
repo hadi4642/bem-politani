@@ -8,7 +8,7 @@
             <ul class="metismenu list-unstyled" id="side-menu">
 
                 <li>
-                    <a href="/dashboard" class="waves-effect">
+                    <a href="{{ route('dashboard') }}" class="waves-effect">
                         <i class="ri-dashboard-line"></i>
                         <span>Dashboard</span>
                     </a>
@@ -28,7 +28,7 @@
 
                 <li>
                     <a href="{{ route('kegiatan.index') }}" class=" waves-effect">
-                        <i class="ri-artboard-2-line"></i>
+                        <i class="ri-file-list-fill"></i>
                         <span>Kegiatan</span>
                     </a>
                 </li>

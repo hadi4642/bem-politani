@@ -53,9 +53,7 @@
                                         <td>{{ $item->tanggal }}</td>
                                         <td>{{ $item->tempat }}</td>
                                         <td>
-                                            {{-- detail --}}
                                             <a href="{{ route('kegiatan.show', $item->id) }}" class="btn btn-sm btn-info waves-effect waves-light">Detail</a>
-                                            {{-- edit --}}
                                             <a href="{{ route('kegiatan.edit', $item->id) }}" class="btn btn-sm btn-warning waves-effect waves-light">Edit</a>
                                             <form action="{{ route('kegiatan.destroy', $item->id) }}" method="POST" class="d-inline">
                                                 @csrf
