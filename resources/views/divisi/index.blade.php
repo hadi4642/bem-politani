@@ -34,7 +34,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                    @if (Auth::user()->role == 'Admin')
                     <a href="{{ route('divisi.create') }}" class="btn btn-primary waves-effect waves-light mb-3"> Tambah Divisi</a>
+                    @endif
                     <table id="datatable" class="table table-bordered table-hover table-striped">
                         <thead>
                             <tr>
@@ -49,12 +51,16 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->nama_divisi }}</td>
                                     <td>
+                                        @if (Auth::user()->role == 'Admin')
                                         <a href="{{ route('divisi.edit', $item->id) }}" class="btn btn-sm btn-warning waves-effect waves-light">Edit</a>
                                         <form action="{{ route('divisi.destroy', $item->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-danger waves-effect waves-light" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
                                         </form>
+                                        @else
+                                            <p>-</p>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

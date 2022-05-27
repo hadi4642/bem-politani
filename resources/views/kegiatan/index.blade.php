@@ -33,7 +33,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                    @if (Auth::user()->role == 'Admin')
                     <a href="{{ route('kegiatan.create') }}" class="btn btn-primary waves-effect waves-light mb-3"> Tambah Kegiatan</a>
+                    @endif
                     <div class="table-responsive">
                         <table id="datatable" class="table table-bordered table-hover table-striped">
                             <thead>
@@ -54,12 +56,14 @@
                                         <td>{{ $item->tempat }}</td>
                                         <td>
                                             <a href="{{ route('kegiatan.show', $item->id) }}" class="btn btn-sm btn-info waves-effect waves-light">Detail</a>
+                                            @if (Auth::user()->role == 'Admin')
                                             <a href="{{ route('kegiatan.edit', $item->id) }}" class="btn btn-sm btn-warning waves-effect waves-light">Edit</a>
                                             <form action="{{ route('kegiatan.destroy', $item->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-sm btn-danger waves-effect waves-light" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
                                             </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

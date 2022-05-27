@@ -34,7 +34,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                    @if (Auth::user()->role == 'Admin')
                     <a href="{{ route('anggota.create') }}" class="btn btn-primary waves-effect waves-light mb-3"> Tambah Anggota</a>
+                    @endif
                     <div class="table-responsive">
                         <table id="datatable" class="table table-bordered table-hover table-striped">
                             <thead>
@@ -64,12 +66,19 @@
                                         <td>{{ $item->divisi->nama_divisi }}</td>
                                         <td>{{ $item->role }}</td>
                                         <td>
+                                            @if (Auth::user()->role == 'Admin')
                                             <a href="{{ route('anggota.edit', $item->id) }}" class="btn btn-sm btn-warning waves-effect waves-light">Edit</a>
+                                            {{-- Cegah user menghapus dirinya sendiri --}}
+                                            @if (Auth::user()->id != $item->id)
                                             <form action="{{ route('anggota.destroy', $item->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-sm btn-danger waves-effect waves-light" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
                                             </form>
+                                            @endif
+                                            @else
+                                                <p>-</p>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

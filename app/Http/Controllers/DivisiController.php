@@ -9,6 +9,11 @@ use RealRashid\SweetAlert\Facades\Alert;
 class DivisiController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('admin')->only('create','edit', 'destroy');
+    }
+
     public function index()
     {
         $divisis = Divisi::all();

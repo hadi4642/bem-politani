@@ -10,6 +10,12 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class KegiatanController extends Controller
 {
+    // Hanya role admin yang bisa mengakses halaman ini
+    public function __construct()
+    {
+        $this->middleware('admin')->only('create','edit', 'destroy');
+    }
+
     public function index()
     {
         $kegiatan = Kegiatan::all();
