@@ -51,7 +51,7 @@ class KegiatanController extends Controller
             'jumlah_peserta' => $request['jumlah_peserta'],
             'dana_masuk' => $request['dana_masuk'],
             'dana_keluar' => $request['dana_keluar'],
-            'anggota_id' => 2,
+            'anggota_id' => auth()->user()->id,
         ]);
 
         // Insert to Table Dokumentasi Nota
@@ -116,7 +116,7 @@ class KegiatanController extends Controller
             'jumlah_peserta' => $request['jumlah_peserta'],
             'dana_masuk' => $request['dana_masuk'],
             'dana_keluar' => $request['dana_keluar'],
-            'anggota_id' => 2,
+            'anggota_id' => auth()->user()->id,
         ]);
 
         // Jika input file ada isinya
