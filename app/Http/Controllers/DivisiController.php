@@ -8,7 +8,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class DivisiController extends Controller
 {
-
+    // Hanya role admin yang bisa mengakses halaman ini
     public function __construct()
     {
         $this->middleware('admin')->only('create','edit', 'destroy');
