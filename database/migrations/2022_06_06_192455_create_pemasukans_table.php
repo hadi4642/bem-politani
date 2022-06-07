@@ -13,16 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('kegiatans', function (Blueprint $table) {
+        Schema::create('pemasukans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kegiatan');
-            $table->string('tema_kegiatan');
-            $table->date('tanggal');
-            $table->string('waktu');
-            $table->string('tempat');
-            $table->text('struktur_panitia');
-            $table->integer('jumlah_peserta');
-            $table->foreignId('anggota_id')->constrained();
+            $table->string('uraian');
+            $table->integer('total');
+            $table->foreignId('kegiatan_id')->constrained();
             $table->timestamps();
         });
     }
@@ -34,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kegiatans');
+        Schema::dropIfExists('pemasukans');
     }
 };

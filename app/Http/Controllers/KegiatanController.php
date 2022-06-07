@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\DokumentasiNota;
+use Illuminate\Support\Facades\DB;
 use App\Models\DokumentasiKegiatan;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -37,61 +41,103 @@ class KegiatanController extends Controller
             'tempat'=>'required',
             'struktur_panitia'=>'required',
             'jumlah_peserta'=>'required',
-            'dana_masuk'=>'required',
-            'dana_keluar'=>'required',
         ]);
 
-        $kegiatan = Kegiatan::create([
-            'nama_kegiatan' => $request['nama_kegiatan'],
-            'tema_kegiatan' => $request['tema_kegiatan'],
-            'tanggal' => $request['tanggal'],
-            'waktu' => $request['waktu'],
-            'tempat' => $request['tempat'],
-            'struktur_panitia' => $request['struktur_panitia'],
-            'jumlah_peserta' => $request['jumlah_peserta'],
-            'dana_masuk' => $request['dana_masuk'],
-            'dana_keluar' => $request['dana_keluar'],
-            'anggota_id' => auth()->user()->id,
-        ]);
+        DB::beginTransaction();
 
-        // Insert to Table Dokumentasi Nota
-        if ($request->hasFile('dokumentasi_nota')) {
-            $notas = $request->file('dokumentasi_nota');
+        try {
+            // Insert to Table Kegiatan
+            $kegiatan = Kegiatan::create([
+                'nama_kegiatan' => $request['nama_kegiatan'],
+                'tema_kegiatan' => $request['tema_kegiatan'],
+                'tanggal' => $request['tanggal'],
+                'waktu' => $request['waktu'],
+                'tempat' => $request['tempat'],
+                'struktur_panitia' => $request['struktur_panitia'],
+                'jumlah_peserta' => $request['jumlah_peserta'],
+                'anggota_id' => auth()->user()->id,
+            ]);
 
-            foreach($notas as $nota) {
-                $filename = date('YmdHis').'_'.$nota->getClientOriginalName();
-                $path = public_path('dokumentasi_nota');
-                $nota->move($path, $filename);
-                DokumentasiNota::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
+            // Insert to Table Pemasukan
+            foreach($request->uraian_pemasukan as $key => $value) {
+                $rupiah = Str::replaceFirst('Rp', '', $request->total_pemasukan[$key]);
+                $pemasukan= Str::replace('.', '', $rupiah);
+                Pemasukan::create([
+                    'uraian' => $value,
+                    'total' => $pemasukan,
+                    'kegiatan_id' => $kegiatan->id,
+                ]);
             }
-        }
 
-        // Insert to Table Dokumentasi Kegiatan
-        if ($request->hasFile('dokumentasi_kegiatan')) {
-            $kegiatans = $request->file('dokumentasi_kegiatan');
-
-            foreach($kegiatans as $kegiatann) {
-                $filename = date('YmdHis').'_'.$kegiatann->getClientOriginalName();
-                $path = public_path('dokumentasi_kegiatan');
-                $kegiatann->move($path, $filename);
-                DokumentasiKegiatan::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
+            // Insert to Table Pengeluaran
+            foreach($request->uraian_pengeluaran as $key => $value) {
+                $rupiah = Str::replaceFirst('Rp', '', $request->harga_satuan[$key]);
+                $satuan= Str::replace('.', '', $rupiah);
+                Pengeluaran::create([
+                    'uraian' => $value,
+                    'jumlah' => $request->jumlah_pengeluaran[$key],
+                    'harga_satuan' => $satuan,
+                    'kegiatan_id' => $kegiatan->id,
+                ]);
             }
-        }
 
-        Alert::toast('Kegiatan '. $request->nama_kegiatan.' berhasil ditambah','success');
-        return redirect()->route('kegiatan.index');
+            // Insert to Table Dokumentasi Nota
+            if ($request->hasFile('dokumentasi_nota')) {
+                $notas = $request->file('dokumentasi_nota');
+
+                foreach($notas as $nota) {
+                    $filename = date('YmdHis').'_'.$nota->getClientOriginalName();
+                    $path = public_path('dokumentasi_nota');
+                    $nota->move($path, $filename);
+                    DokumentasiNota::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
+                }
+            }
+
+            // Insert to Table Dokumentasi Kegiatan
+            if ($request->hasFile('dokumentasi_kegiatan')) {
+                $kegiatans = $request->file('dokumentasi_kegiatan');
+
+                foreach($kegiatans as $kegiatann) {
+                    $filename = date('YmdHis').'_'.$kegiatann->getClientOriginalName();
+                    $path = public_path('dokumentasi_kegiatan');
+                    $kegiatann->move($path, $filename);
+                    DokumentasiKegiatan::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
+                }
+            }
+
+            DB::commit();
+            Alert::toast('Kegiatan '. $request->nama_kegiatan.' berhasil ditambah','success');
+            return redirect()->route('kegiatan.index');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('kegiatan.index')->with('error', 'Data gagal ditambahkan');
+        }
     }
 
     public function show(Kegiatan $kegiatan)
     {
         $notas = DokumentasiNota::where('kegiatan_id', $kegiatan->id)->get();
         $dok_kegiatan = DokumentasiKegiatan::where('kegiatan_id', $kegiatan->id)->get();
-        return view('kegiatan.show', compact('kegiatan', 'notas', 'dok_kegiatan'));
+        $pemasukan = Pemasukan::where('kegiatan_id', $kegiatan->id)->get();
+        // get total pemasukan
+        $total_pemasukan = 0;
+        foreach($pemasukan as $pemasukans) {
+            $total_pemasukan += $pemasukans->total;
+        }
+        $pengeluaran = Pengeluaran::where('kegiatan_id', $kegiatan->id)->get();
+        // get total pengeluaran
+        $total_pengeluaran = 0;
+        foreach($pengeluaran as $pengeluarans) {
+            $total_pengeluaran += $pengeluarans->harga_satuan * $pengeluarans->jumlah;
+        }
+        return view('kegiatan.show', compact('kegiatan', 'notas', 'dok_kegiatan', 'pemasukan', 'pengeluaran', 'total_pemasukan', 'total_pengeluaran'));
     }
 
     public function edit(Kegiatan $kegiatan)
     {
-        return view('kegiatan.edit', compact('kegiatan'));
+        $pemasukan = Pemasukan::where('kegiatan_id', $kegiatan->id)->get();
+        $pengeluaran = Pengeluaran::where('kegiatan_id', $kegiatan->id)->get();
+        return view('kegiatan.edit', compact('kegiatan', 'pemasukan', 'pengeluaran'));
     }
 
     public function update(Request $request, Kegiatan $kegiatan)
@@ -104,90 +150,142 @@ class KegiatanController extends Controller
             'tempat'=>'required',
             'struktur_panitia'=>'required',
             'jumlah_peserta'=>'required',
-            'dana_masuk'=>'required',
-            'dana_keluar'=>'required',
         ]);
 
-        $kegiatan->update([
-            'nama_kegiatan' => $request['nama_kegiatan'],
-            'tema_kegiatan' => $request['tema_kegiatan'],
-            'tanggal' => $request['tanggal'],
-            'waktu' => $request['waktu'],
-            'tempat' => $request['tempat'],
-            'struktur_panitia' => $request['struktur_panitia'],
-            'jumlah_peserta' => $request['jumlah_peserta'],
-            'dana_masuk' => $request['dana_masuk'],
-            'dana_keluar' => $request['dana_keluar'],
-            'anggota_id' => auth()->user()->id,
-        ]);
+        DB::beginTransaction();
 
-        // Jika input file ada isinya
-        if ($request->hasFile('dokumentasi_nota')) {
-            // Hapus gambar sebelumnya
-            $notas2 = DokumentasiNota::where('kegiatan_id', $kegiatan->id)->get();
-            foreach($notas2 as $nota) {
+        try {
+            // Update table kegiatan
+            $kegiatan->update([
+                'nama_kegiatan' => $request['nama_kegiatan'],
+                'tema_kegiatan' => $request['tema_kegiatan'],
+                'tanggal' => $request['tanggal'],
+                'waktu' => $request['waktu'],
+                'tempat' => $request['tempat'],
+                'struktur_panitia' => $request['struktur_panitia'],
+                'jumlah_peserta' => $request['jumlah_peserta'],
+                'anggota_id' => auth()->user()->id,
+            ]);
+
+            // Delete table pemasukan
+            Pemasukan::where('kegiatan_id', $kegiatan->id)->delete();
+
+            // Insert to Table Pemasukan
+            foreach($request->uraian_pemasukan as $key => $value) {
+                $rupiah = Str::replaceFirst('Rp', '', $request->total_pemasukan[$key]);
+                $pemasukan= Str::replace('.', '', $rupiah);
+                Pemasukan::create([
+                    'uraian' => $value,
+                    'total' => $pemasukan,
+                    'kegiatan_id' => $kegiatan->id,
+                ]);
+            }
+
+            // Delete table pengeluaran
+            Pengeluaran::where('kegiatan_id', $kegiatan->id)->delete();
+
+            // Insert to Table Pengeluaran
+            foreach($request->uraian_pengeluaran as $key => $value) {
+                $rupiah = Str::replaceFirst('Rp', '', $request->harga_satuan[$key]);
+                $satuan= Str::replace('.', '', $rupiah);
+                Pengeluaran::create([
+                    'uraian' => $value,
+                    'jumlah' => $request->jumlah_pengeluaran[$key],
+                    'harga_satuan' => $satuan,
+                    'kegiatan_id' => $kegiatan->id,
+                ]);
+            }
+
+            // Jika input file ada isinya
+            if ($request->hasFile('dokumentasi_nota')) {
+                // Hapus gambar sebelumnya
+                $notas2 = DokumentasiNota::where('kegiatan_id', $kegiatan->id)->get();
+                foreach($notas2 as $nota) {
+                    $nota->delete();
+                    $image_path = public_path('dokumentasi_nota/'.$nota->filename);
+                    if(file_exists($image_path)) {
+                        unlink($image_path);
+                    }
+                }
+                // Insert Gambar Baru
+                $notas = $request->file('dokumentasi_nota');
+                foreach($notas as $nota) {
+                    $filename = date('YmdHis').'_'.$nota->getClientOriginalName();
+                    $path = public_path('dokumentasi_nota');
+                    $nota->move($path, $filename);
+                    DokumentasiNota::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
+                }
+            }
+
+            // Jika input file ada isinya
+            if ($request->hasFile('dokumentasi_kegiatan')) {
+                // Hapus gambar sebelumnya
+                $kegiatans2 = DokumentasiKegiatan::where('kegiatan_id', $kegiatan->id)->get();
+                foreach($kegiatans2 as $kegiatann) {
+                    $kegiatann->delete();
+                    $image_path = public_path('dokumentasi_kegiatan/'.$kegiatann->filename);
+                    if(file_exists($image_path)) {
+                        unlink($image_path);
+                    }
+                }
+                // Insert Gambar Baru
+                $kegiatans = $request->file('dokumentasi_kegiatan');
+                foreach($kegiatans as $kegiatann) {
+                    $filename = date('YmdHis').'_'.$kegiatann->getClientOriginalName();
+                    $path = public_path('dokumentasi_kegiatan');
+                    $kegiatann->move($path, $filename);
+                    DokumentasiKegiatan::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
+                }
+            }
+
+            DB::commit();
+            Alert::toast('Kegiatan berhasil diedit','success');
+            return redirect()->route('kegiatan.index');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('kegiatan.index')->with('error', 'Data gagal diedit');
+        }
+    }
+
+    public function destroy(Kegiatan $kegiatan)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Delete pemasukan kegiatan
+            Pemasukan::where('kegiatan_id', $kegiatan->id)->delete();
+
+            // Delete pengeluaran kegaitan
+            Pengeluaran::where('kegiatan_id', $kegiatan->id)->delete();
+
+            // Delete Dokumentasi Nota kegiatan
+            $notas = DokumentasiNota::where('kegiatan_id', $kegiatan->id)->get();
+            foreach($notas as $nota) {
                 $nota->delete();
                 $image_path = public_path('dokumentasi_nota/'.$nota->filename);
                 if(file_exists($image_path)) {
                     unlink($image_path);
                 }
             }
-            // Insert Gambar Baru
-            $notas = $request->file('dokumentasi_nota');
-            foreach($notas as $nota) {
-                $filename = date('YmdHis').'_'.$nota->getClientOriginalName();
-                $path = public_path('dokumentasi_nota');
-                $nota->move($path, $filename);
-                DokumentasiNota::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
-            }
-        }
 
-        // Jika input file ada isinya
-        if ($request->hasFile('dokumentasi_kegiatan')) {
-            // Hapus gambar sebelumnya
-            $kegiatans2 = DokumentasiKegiatan::where('kegiatan_id', $kegiatan->id)->get();
-            foreach($kegiatans2 as $kegiatann) {
+            // Delete Dokumentasi Kegiatan
+            $kegiatans = DokumentasiKegiatan::where('kegiatan_id', $kegiatan->id)->get();
+            foreach($kegiatans as $kegiatann) {
                 $kegiatann->delete();
                 $image_path = public_path('dokumentasi_kegiatan/'.$kegiatann->filename);
                 if(file_exists($image_path)) {
                     unlink($image_path);
                 }
             }
-            // Insert Gambar Baru
-            $kegiatans = $request->file('dokumentasi_kegiatan');
-            foreach($kegiatans as $kegiatann) {
-                $filename = date('YmdHis').'_'.$kegiatann->getClientOriginalName();
-                $path = public_path('dokumentasi_kegiatan');
-                $kegiatann->move($path, $filename);
-                DokumentasiKegiatan::create(['filename' => $filename, 'kegiatan_id' => $kegiatan->id]);
-            }
-        }
 
-        Alert::toast('Kegiatan '. $request->nama_kegiatan.' berhasil ditambah','success');
-        return redirect()->route('kegiatan.index');
-    }
-
-    public function destroy(Kegiatan $kegiatan)
-    {
-        $notas = DokumentasiNota::where('kegiatan_id', $kegiatan->id)->get();
-        foreach($notas as $nota) {
-            $nota->delete();
-            $image_path = public_path('dokumentasi_nota/'.$nota->filename);
-            if(file_exists($image_path)) {
-                unlink($image_path);
-            }
+            $kegiatan->delete();
+            DB::commit();
+            Alert::toast('Kegiatan '. $kegiatan->nama_kegiatan.' berhasil dihapus','success');
+            return redirect()->route('kegiatan.index');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('kegiatan.index')->with('error', 'Data gagal dihapus');
         }
-        $kegiatans = DokumentasiKegiatan::where('kegiatan_id', $kegiatan->id)->get();
-        foreach($kegiatans as $kegiatann) {
-            $kegiatann->delete();
-            $image_path = public_path('dokumentasi_kegiatan/'.$kegiatann->filename);
-            if(file_exists($image_path)) {
-                unlink($image_path);
-            }
-        }
-
-        $kegiatan->delete();
-        Alert::toast('Kegiatan '. $kegiatan->nama_kegiatan.' berhasil dihapus','success');
-        return redirect()->route('kegiatan.index');
     }
 }
