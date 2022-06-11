@@ -56,6 +56,7 @@
                                         <td>{{ $item->tempat }}</td>
                                         <td>
                                             <a href="{{ route('kegiatan.show', $item->id) }}" class="btn btn-sm btn-info waves-effect waves-light">Detail</a>
+                                            <a href="{{ route('kegiatan.print', $item->id) }}" class="btn btn-sm btn-success waves-effect waves-light" target="_blank">Print</a>
                                             @if (Auth::user()->role == 'Admin')
                                             <a href="{{ route('kegiatan.edit', $item->id) }}" class="btn btn-sm btn-warning waves-effect waves-light">Edit</a>
                                             <form action="{{ route('kegiatan.destroy', $item->id) }}" method="POST" class="d-inline">

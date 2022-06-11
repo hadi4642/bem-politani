@@ -49,9 +49,29 @@
                                 <td>{{ $kegiatan->waktu }}</td>
                             </tr>
                             <tr>
+                                <th>Latar Belakang</th>
+                                <td>:</td>
+                                <td>{!! $kegiatan->latar_belakang !!}</td>
+                            </tr>
+                            <tr>
+                                <th>Tujuan</th>
+                                <td>:</td>
+                                <td>{!! $kegiatan->tujuan !!}</td>
+                            </tr>
+                            <tr>
                                 <th>Tempat</th>
                                 <td>:</td>
                                 <td>{{ $kegiatan->tempat }}</td>
+                            </tr>
+                            <tr>
+                                <th>Sasaran Kegiatan</th>
+                                <td>:</td>
+                                <td>{!! $kegiatan->sasaran_kegiatan !!}</td>
+                            </tr>
+                            <tr>
+                                <th>Penutup</th>
+                                <td>:</td>
+                                <td>{!! $kegiatan->penutup !!}</td>
                             </tr>
                             <tr>
                                 <th>Struktur Panitia</th>

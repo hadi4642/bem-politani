@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('prodi', ProdiController::class)->except(['show']);
     Route::resource('anggota', AnggotaController::class)->except(['show']);
     Route::resource('kegiatan', KegiatanController::class);
+    Route::get('kegiatan/print/{id}', [KegiatanController::class, 'print'])->name('kegiatan.print');
 });
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
 use Illuminate\Support\Str;
@@ -11,6 +12,7 @@ use App\Models\DokumentasiNota;
 use Illuminate\Support\Facades\DB;
 use App\Models\DokumentasiKegiatan;
 use RealRashid\SweetAlert\Facades\Alert;
+use \NumberFormatter;
 
 class KegiatanController extends Controller
 {
@@ -38,7 +40,11 @@ class KegiatanController extends Controller
             'tema_kegiatan'=>'required',
             'tanggal'=>'required',
             'waktu'=>'required',
+            'latar_belakang' => 'required',
+            'tujuan' => 'required',
             'tempat'=>'required',
+            'sasaran_kegiatan'=>'required',
+            'penutup'=>'required',
             'struktur_panitia'=>'required',
             'jumlah_peserta'=>'required',
         ]);
@@ -52,7 +58,11 @@ class KegiatanController extends Controller
                 'tema_kegiatan' => $request['tema_kegiatan'],
                 'tanggal' => $request['tanggal'],
                 'waktu' => $request['waktu'],
+                'latar_belakang' => $request['latar_belakang'],
+                'tujuan' => $request['tujuan'],
                 'tempat' => $request['tempat'],
+                'sasaran_kegiatan' => $request['sasaran_kegiatan'],
+                'penutup' => $request['penutup'],
                 'struktur_panitia' => $request['struktur_panitia'],
                 'jumlah_peserta' => $request['jumlah_peserta'],
                 'anggota_id' => auth()->user()->id,
@@ -147,7 +157,11 @@ class KegiatanController extends Controller
             'tema_kegiatan'=>'required',
             'tanggal'=>'required',
             'waktu'=>'required',
+            'latar_belakang' => 'required',
+            'tujuan' => 'required',
             'tempat'=>'required',
+            'sasaran_kegiatan'=>'required',
+            'penutup'=>'required',
             'struktur_panitia'=>'required',
             'jumlah_peserta'=>'required',
         ]);
@@ -161,7 +175,11 @@ class KegiatanController extends Controller
                 'tema_kegiatan' => $request['tema_kegiatan'],
                 'tanggal' => $request['tanggal'],
                 'waktu' => $request['waktu'],
+                'latar_belakang' => $request['latar_belakang'],
+                'tujuan' => $request['tujuan'],
                 'tempat' => $request['tempat'],
+                'sasaran_kegiatan' => $request['sasaran_kegiatan'],
+                'penutup' => $request['penutup'],
                 'struktur_panitia' => $request['struktur_panitia'],
                 'jumlah_peserta' => $request['jumlah_peserta'],
                 'anggota_id' => auth()->user()->id,
@@ -287,5 +305,31 @@ class KegiatanController extends Controller
             DB::rollback();
             return redirect()->route('kegiatan.index')->with('error', 'Data gagal dihapus');
         }
+    }
+
+    public function print($id)
+    {
+        $kegiatan = Kegiatan::find($id);
+        $notas = DokumentasiNota::where('kegiatan_id', $kegiatan->id)->get();
+        $dok_kegiatan = DokumentasiKegiatan::where('kegiatan_id', $kegiatan->id)->get();
+        $pemasukan = Pemasukan::where('kegiatan_id', $kegiatan->id)->get();
+        // get total pemasukan
+        $total_pemasukan = 0;
+        foreach($pemasukan as $pemasukans) {
+            $total_pemasukan += $pemasukans->total;
+        }
+        $pengeluaran = Pengeluaran::where('kegiatan_id', $kegiatan->id)->get();
+        // get total pengeluaran
+        $total_pengeluaran = 0;
+        foreach($pengeluaran as $pengeluarans) {
+            $total_pengeluaran += $pengeluarans->harga_satuan * $pengeluarans->jumlah;
+        }
+        $numberFormat = new NumberFormatter('id', NumberFormatter::SPELLOUT);
+        $terbilang = ucwords($numberFormat->format($total_pengeluaran));
+
+        $pdf = PDF::loadView('kegiatan.print', compact('kegiatan', 'notas', 'dok_kegiatan', 'pemasukan', 'pengeluaran', 'total_pemasukan', 'total_pengeluaran', 'terbilang'));
+        // return view('kegiatan.print', compact('kegiatan', 'notas', 'dok_kegiatan', 'pemasukan', 'pengeluaran', 'total_pemasukan', 'total_pengeluaran'));
+        return $pdf->stream();
+        // return $pdf->download('print.pdf');
     }
 }

@@ -55,9 +55,37 @@
                         @enderror
                     </div>
                     <div class="mb-3">
+                        <label for="elm1">Latar Belakang</label>
+                        <textarea name="latar_belakang">{{ $kegiatan->latar_belakang }}</textarea>
+                        @error('latar_belakang')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="elm1">Tujuan Kegiatan</label>
+                        <textarea name="tujuan">{{ $kegiatan->tujuan }}</textarea>
+                        @error('tujuan')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
                         <label for="tempat">Tempat</label>
                         <input class="form-control" type="text" id="tempat" name="tempat" required value="{{ $kegiatan->tempat }}">
                         @error('tempat')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="elm1">Sasaran Kegiatan</label>
+                        <textarea name="sasaran_kegiatan">{{ $kegiatan->sasaran_kegiatan }}</textarea>
+                        @error('sasaran_kegiatan')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="elm1">Penutup</label>
+                        <textarea name="penutup">{{ $kegiatan->penutup }}</textarea>
+                        @error('penutup')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
