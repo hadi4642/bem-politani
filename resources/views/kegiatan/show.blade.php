@@ -10,7 +10,6 @@
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
             <h4 class="mb-sm-0">{{ $kegiatan->nama_kegiatan }}</h4>
-
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item active">Kegiatan</li>
@@ -26,6 +25,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
+                    <a href="{{ route('kegiatan.print', $kegiatan->id) }}" class="btn btn-success waves-effect waves-light" target="_blank">Print</a>
                     <table class="table table-borderless">
                         <tbody>
                             <tr>
