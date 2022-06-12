@@ -16,4 +16,9 @@ class Kegiatan extends Model
         return $this->belongsTo(Anggota::class);
     }
 
+    public function kabinet()
+    {
+        return $this->belongsTo(Kabinet::class);
+    }
+
 }

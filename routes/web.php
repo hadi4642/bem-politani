@@ -7,6 +7,7 @@ use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KabinetController;
 
 Route::get('/', function(){
     return redirect('dashboard');
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('divisi', DivisiController::class)->except(['show']);
     Route::resource('prodi', ProdiController::class)->except(['show']);
     Route::resource('anggota', AnggotaController::class)->except(['show']);
+    Route::resource('kabinet', KabinetController::class)->except(['show']);
     Route::resource('kegiatan', KegiatanController::class);
     Route::get('kegiatan/print/{id}', [KegiatanController::class, 'print'])->name('kegiatan.print');
 });

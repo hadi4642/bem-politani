@@ -25,7 +25,12 @@
                         <li><a href="{{ route('anggota.index') }}">Anggota</a></li>
                     </ul>
                 </li>
-
+                <li>
+                    <a href="{{ route('kabinet.index') }}" class=" waves-effect">
+                        <i class="ri-government-fill"></i>
+                        <span>Kabinet</span>
+                    </a>
+                </li>
                 <li>
                     <a href="{{ route('kegiatan.index') }}" class=" waves-effect">
                         <i class="ri-file-list-fill"></i>
