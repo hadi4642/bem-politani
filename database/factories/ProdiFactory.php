@@ -17,7 +17,17 @@ class ProdiFactory extends Factory
     public function definition()
     {
         return [
-            'nama_prodi' => $this->faker->unique()->randomElement(['TRPL', 'TG', 'BTP', 'PP']),
+            'nama_prodi' => $this->faker->unique()->randomElement([
+                'Pengelolaan Hutan',
+                'Pengolahan Hasil Hutan',
+                'Budidaya Tanaman Perkebunan',
+                'Teknologi Hasil Perkebunan',
+                'Pengelolaan Lingkungan',
+                'Teknologi Geomatika',
+                'Pengelolaan Perkebunan',
+                'Teknologi Rekayasa Perangkat Lunak',
+                'Rekayasa Kayu'
+            ]),
         ];
     }
 }

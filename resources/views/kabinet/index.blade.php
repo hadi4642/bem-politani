@@ -44,6 +44,7 @@
                                 <th>Nama Kabinet</th>
                                 <th>Periode</th>
                                 <th>Target Kegiatan</th>
+                                <th>Realisasi</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -55,6 +56,7 @@
                                     <td>{{ $item->nama_kabinet }}</td>
                                     <td>{{ $item->periode }}</td>
                                     <td>{{ $item->target_kegiatan }}</td>
+                                    <td>{{ $item->count }}</td>
                                     <td>
                                         @if (Auth::user()->role == 'Admin')
                                         <a href="{{ route('kabinet.edit', $item->id) }}" class="btn btn-sm btn-warning waves-effect waves-light">Edit</a>

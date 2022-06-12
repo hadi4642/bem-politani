@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kabinet;
+use App\Models\Kegiatan;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -18,6 +19,11 @@ class KabinetController extends Controller
     public function index()
     {
         $kabinets = Kabinet::all();
+        // count kegiatan kabinet
+        $kabinets->each(function($kabinet){
+            $kabinet->count = $kabinet->kegiatans->count();
+        });
+
         return view('kabinet.index', compact('kabinets'));
     }
 

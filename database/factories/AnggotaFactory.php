@@ -23,9 +23,9 @@ class AnggotaFactory extends Factory
             'jenis_kelamin' => $this->faker->randomElement(['Laki-Laki', 'Perempuan']),
             'no_telp' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->safeEmail,
-            'prodi_id' => $this->faker->numberBetween(1, 4),
+            'prodi_id' => $this->faker->numberBetween(1, 9),
             'tahun_angkatan' => $this->faker->year,
-            'divisi_id' => $this->faker->numberBetween(1, 4),
+            'divisi_id' => $this->faker->numberBetween(1, 6),
             'password' => Hash::make('password'),
             'role' => $this->faker->randomElement(['Admin', 'User']),
         ];

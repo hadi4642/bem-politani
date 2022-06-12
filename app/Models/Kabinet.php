@@ -10,4 +10,9 @@ class Kabinet extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function kegiatans()
+    {
+        return $this->hasMany(Kegiatan::class);
+    }
 }

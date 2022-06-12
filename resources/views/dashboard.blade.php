@@ -51,7 +51,15 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-3">Target & Realisasi Kegiatan 3 Kabinet Terakhir</h2>
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title mb-3">5 Kegiatan Terakhir</h2>
@@ -61,8 +69,6 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Kegiatan</th>
-                                <th>Tanggal</th>
-                                <th>Tempat</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -71,8 +77,6 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->nama_kegiatan }}</td>
-                                <td>{{ $item->tanggal }}</td>
-                                <td>{{ $item->tempat }}</td>
                                 <td>
                                     <a href="{{ route('kegiatan.show', $item->id) }}"
                                         class="btn btn-sm btn-info waves-effect waves-light">Detail</a>
@@ -87,3 +91,44 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    var data = {
+    // get nama_kabinet from array target_realisasi
+    labels: @json($nama_kabinet),
+    // datasets target & realisasi from array
+    datasets: [{
+        label: 'Target',
+        // foreach data
+        data: @json($target),
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+    }, {
+        label: 'Realisasi',
+        data: @json($realisasi),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+    }]
+
+};
+
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+        barValueSpacing: 20,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    min: 0,
+                }
+            }]
+        }
+    }
+});
+    </script>
+@endpush

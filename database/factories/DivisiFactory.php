@@ -17,7 +17,14 @@ class DivisiFactory extends Factory
     public function definition()
     {
         return [
-            'nama_divisi' => $this->faker->unique()->randomElement(['Komunikasi', 'Dalam Negeri', 'Luar Negeri', 'Advokasi']),
+            'nama_divisi' => $this->faker->unique()->randomElement([
+                'Kesekretariatan dan Administrasi',
+                'Komunikasi dan Media Komunikasi',
+                'Luar Negeri',
+                'Dalam Negeri',
+                'Advokasi',
+                'Kesejahteraan Manusia'
+            ]),
         ];
     }
 }
