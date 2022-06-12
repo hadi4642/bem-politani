@@ -113,7 +113,7 @@
             {{-- Cover (Halaman 1) --}}
             <p style="page-break-after: never">
                 <h5 class="text-center text-uppercase mx-3" style="line-height: 32px">
-                    LAPORAN PERTANGGUNG JAWABAN DEPARTEMEN ADVOKASI BADAN EKSEKUTIF MAHASISWA PERIODE 2022/2023 KABINET NAWASENA POLITEKNIK PERTANIAN NEGERI SAMARINDA
+                    LAPORAN PERTANGGUNG JAWABAN {{ $kegiatan->anggota->divisi->nama_divisi }} BADAN EKSEKUTIF MAHASISWA PERIODE {{ $kegiatan->kabinet->periode }} KABINET {{ $kegiatan->kabinet->nama_kabinet }} POLITEKNIK PERTANIAN NEGERI SAMARINDA
                 </h5>
                 <br><br><br><br>
                 <div class="my-5">
@@ -126,20 +126,20 @@
                                 <img src="{{ asset('assets/images/logo_bem.png') }}" width="100" alt="" class="mx-4">
                             </td>
                             <td>
-                                <img src="{{ asset('assets/images/kabinet_nawasena.png') }}" width="100" alt="">
+                                <img src="{{ asset('logo_kabinet/'.$kegiatan->kabinet->logo) }}" width="100" alt="">
                             </td>
                         </tr>
                     </table>
                 </div>
                 <br><br><br><br>
-                <h5 class="text-center text-uppercase">
+                <h5 class="text-center">
                     BADAN EKSEKUTIF MAHASISWA
                 </h5>
-                <h5 class="text-center text-uppercase">
+                <h5 class="text-center">
                     POLITEKNIK PERTANIAN NEGERI SAMARINDA
                 </h5>
                 <h5 class="text-center text-uppercase">
-                    2022/2023
+                    {{ $kegiatan->kabinet->periode }}
                 </h5>
                 <p class="f-12 text-center mt-2">Sekretariat : Jl. Samaratulangi Kel. Gunung Panjang Kec. Smd Seberang Kontak : 085391110006</p>
                 <p class="f-12 text-center"> website : <a href="">www.politanisamarinda.ac.id</a></p>
@@ -148,9 +148,9 @@
             {{-- Lembar Pengesahan (Halaman 2) --}}
             <p style="page-break-after: always">
                 <h6 class="text-center">LEMBAR PENGESAHAN</h6>
-                <h6 class="text-center text-uppercase">LAPORAN PERTANGGUNG JAWABAN DEPARTEMEN ADVOKASI</h6>
+                <h6 class="text-center text-uppercase">LAPORAN PERTANGGUNG JAWABAN {{ $kegiatan->anggota->divisi->nama_divisi }}</h6>
                 <h6 class="text-center">BADAN EKSEKUTIF MAHASISWA POLITEKNIK PERTANIAN NEGERI SAMARINDA</h6>
-                <h6 class="text-center">PERIODE 2022/2023</h6>
+                <h6 class="text-center">{{ $kegiatan->kabinet->periode }}</h6>
                 <br>
 
                 <table id="pengesahan">
@@ -162,17 +162,17 @@
                     <tr>
                         <td>NAMA KOORDINATOR</td>
                         <td>:&nbsp;</td>
-                        <td>Derrby Didan Delvanoreza</td>
+                        <td>{{ $kegiatan->anggota->nama }}</td>
                     </tr>
                     <tr>
                         <td>JURUSAN</td>
                         <td>:&nbsp;</td>
-                        <td>Teknologi Rekayasa Perangkat Lunak</td>
+                        <td>{{ $kegiatan->anggota->prodi->nama_prodi }}</td>
                     </tr>
                     <tr>
                         <td>NOMOR HANDPHONE</td>
                         <td>:&nbsp;</td>
-                        <td>08324234232342</td>
+                        <td>{{ $kegiatan->anggota->no_telp }}</td>
                     </tr>
                     <tr>
                         <td>BIAYA YANG TELAH TERPAKAI</td>
@@ -188,7 +188,7 @@
                 <br><br><br><br><br>
                 <table style="float:right">
                     <tr>
-                        <td>Koordinator Departemen Advokasi 2022/2023</td>
+                        <td>Koordinator {{ $kegiatan->anggota->divisi->nama_divisi }} {{ $kegiatan->kabinet->periode }}</td>
                     </tr>
                     <tr>
                         <td>Badan Eksekutif Mahasiswa</td>
@@ -197,7 +197,7 @@
                         <td>Politeknik Pertanian Negeri Samarinda</td>
                     </tr>
                     <tr>
-                        <td>Samarinda, 28 Juni 2022</td>
+                        <td>{{ \Carbon\Carbon::parse($kegiatan->created_at)->translatedFormat('d F Y') }}</td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
@@ -209,7 +209,7 @@
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
-                        <td><u>Derrby Didan Delvanoreza</u></td>
+                        <td><u>{{ $kegiatan->anggota->nama }}</u></td>
                     </tr>
                 </table>
 
@@ -316,11 +316,13 @@
                 </table>
                 <br>
                 <p class="f-12 sub"><strong>d. Dokumentasi Nota</strong></p>
+                <br>
                 @foreach ($notas as $nota)
                     <img src="{{ asset('dokumentasi_nota/'.$nota->filename) }}" height="200" class="p-2 rounded">
                 @endforeach
                 <br>
                 <p class="f-12 sub"><strong>e. Dokumentasi Kegiatan</strong></p>
+                <br>
                 @foreach ($dok_kegiatan as $item)
                     <img src="{{ asset('dokumentasi_kegiatan/'.$item->filename) }}" height="200"
                 class="p-2 rounded">

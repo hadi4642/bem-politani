@@ -55,6 +55,17 @@
                         @enderror
                     </div>
                     <div class="mb-3">
+                        <label for="kabinet_id">Kabinet</label>
+                        <select name="kabinet_id" id="kabinet_id" class="form-control">
+                            @foreach ($kabinets as $kabinet)
+                                <option value="{{ $kabinet->id }}" {{ $kegiatan->kabinet_id == $kabinet->id ? 'selected' : '' }}>{{ $kabinet->nama_kabinet }}</option>
+                            @endforeach
+                        </select>
+                        @error('kabinet_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
                         <label for="elm1">Latar Belakang</label>
                         <textarea name="latar_belakang">{{ $kegiatan->latar_belakang }}</textarea>
                         @error('latar_belakang')

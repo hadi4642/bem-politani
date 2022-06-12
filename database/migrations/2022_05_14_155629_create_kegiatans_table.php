@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('tema_kegiatan');
             $table->date('tanggal');
             $table->string('waktu');
+            $table->foreignId('kabinet_id')->constrained();
             $table->text('latar_belakang');
             $table->text('tujuan');
             $table->string('tempat');

@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use \NumberFormatter;
+use App\Models\Kabinet;
 use App\Models\Kegiatan;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\DokumentasiNota;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\DokumentasiKegiatan;
 use RealRashid\SweetAlert\Facades\Alert;
-use \NumberFormatter;
 
 class KegiatanController extends Controller
 {
@@ -30,7 +31,8 @@ class KegiatanController extends Controller
 
     public function create()
     {
-        return view('kegiatan.create');
+        $kabinets = Kabinet::all();
+        return view('kegiatan.create', compact('kabinets'));
     }
 
     public function store(Request $request)
@@ -40,6 +42,7 @@ class KegiatanController extends Controller
             'tema_kegiatan'=>'required',
             'tanggal'=>'required',
             'waktu'=>'required',
+            'kabinet_id'=>'required',
             'latar_belakang' => 'required',
             'tujuan' => 'required',
             'tempat'=>'required',
@@ -58,6 +61,7 @@ class KegiatanController extends Controller
                 'tema_kegiatan' => $request['tema_kegiatan'],
                 'tanggal' => $request['tanggal'],
                 'waktu' => $request['waktu'],
+                'kabinet_id' => $request['kabinet_id'],
                 'latar_belakang' => $request['latar_belakang'],
                 'tujuan' => $request['tujuan'],
                 'tempat' => $request['tempat'],
@@ -145,9 +149,10 @@ class KegiatanController extends Controller
 
     public function edit(Kegiatan $kegiatan)
     {
+        $kabinets = Kabinet::all();
         $pemasukan = Pemasukan::where('kegiatan_id', $kegiatan->id)->get();
         $pengeluaran = Pengeluaran::where('kegiatan_id', $kegiatan->id)->get();
-        return view('kegiatan.edit', compact('kegiatan', 'pemasukan', 'pengeluaran'));
+        return view('kegiatan.edit', compact('kegiatan', 'kabinets', 'pemasukan', 'pengeluaran'));
     }
 
     public function update(Request $request, Kegiatan $kegiatan)
@@ -157,6 +162,7 @@ class KegiatanController extends Controller
             'tema_kegiatan'=>'required',
             'tanggal'=>'required',
             'waktu'=>'required',
+            'kabinet_id'=>'required',
             'latar_belakang' => 'required',
             'tujuan' => 'required',
             'tempat'=>'required',
@@ -175,6 +181,7 @@ class KegiatanController extends Controller
                 'tema_kegiatan' => $request['tema_kegiatan'],
                 'tanggal' => $request['tanggal'],
                 'waktu' => $request['waktu'],
+                'kabinet_id' => $request['kabinet_id'],
                 'latar_belakang' => $request['latar_belakang'],
                 'tujuan' => $request['tujuan'],
                 'tempat' => $request['tempat'],

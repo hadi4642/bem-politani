@@ -49,6 +49,11 @@
                                 <td>{{ $kegiatan->waktu }}</td>
                             </tr>
                             <tr>
+                                <th>Kabinet</th>
+                                <td>:</td>
+                                <td>{{ $kegiatan->kabinet->nama_kabinet }}</td>
+                            </tr>
+                            <tr>
                                 <th>Latar Belakang</th>
                                 <td>:</td>
                                 <td>{!! $kegiatan->latar_belakang !!}</td>

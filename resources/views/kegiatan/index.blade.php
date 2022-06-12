@@ -44,6 +44,8 @@
                                     <th>Nama Kegiatan</th>
                                     <th>Tanggal</th>
                                     <th>Tempat</th>
+                                    <th>Kabinet</th>
+                                    <th>Divisi</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -54,6 +56,8 @@
                                         <td>{{ $item->nama_kegiatan }}</td>
                                         <td>{{ $item->tanggal }}</td>
                                         <td>{{ $item->tempat }}</td>
+                                        <td>{{ $item->kabinet->nama_kabinet }}</td>
+                                        <td>{{ $item->anggota->divisi->nama_divisi }}</td>
                                         <td>
                                             <a href="{{ route('kegiatan.show', $item->id) }}" class="btn btn-sm btn-info waves-effect waves-light">Detail</a>
                                             <a href="{{ route('kegiatan.print', $item->id) }}" class="btn btn-sm btn-success waves-effect waves-light" target="_blank">Print</a>
