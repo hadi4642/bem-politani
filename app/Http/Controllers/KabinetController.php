@@ -97,12 +97,16 @@ class KabinetController extends Controller
 
     public function destroy(Kabinet $kabinet)
     {
-        $path = public_path('logo_kabinet/'.$kabinet->logo);
-        if (file_exists($path)) {
-            unlink($path);
+        try{
+            $kabinet->delete();
+            $path = public_path('logo_kabinet/'.$kabinet->logo);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+            Alert::toast('Kabinet '. $kabinet->nama_kabinet.' berhasil dihapus','success');
+        } catch (\Throwable $th) {
+            Alert::toast('Kabinet '. $kabinet->nama_kabinet.' gagal dihapus','error');
         }
-        $kabinet->delete();
-        Alert::toast('Kabinet '. $kabinet->nama_kabinet.' berhasil dihapus','success');
         return redirect()->route('kabinet.index');
     }
 }

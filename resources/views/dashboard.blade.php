@@ -96,19 +96,16 @@
 <script>
     const ctx = document.getElementById('myChart').getContext('2d');
     var data = {
-    // get nama_kabinet from array target_realisasi
-    labels: @json($nama_kabinet),
-    // datasets target & realisasi from array
+    labels: {{ Js::from($nama_kabinet) }},
     datasets: [{
         label: 'Target',
-        // foreach data
-        data: @json($target),
+        data: {{ Js::from($target) }},
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1
     }, {
         label: 'Realisasi',
-        data: @json($realisasi),
+        data: {{ Js::from($realisasi) }},
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1

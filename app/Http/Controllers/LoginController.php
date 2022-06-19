@@ -9,12 +9,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
-
     public function view()
     {
         return view('auth.login');
@@ -28,7 +22,6 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
             $nama = auth()->user()->nama;
             Alert::toast('Selamat datang '. $nama, 'success');
             return redirect()->intended('dashboard');

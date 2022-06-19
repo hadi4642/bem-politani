@@ -43,6 +43,7 @@ class AnggotaController extends Controller
             'password' => 'required',
             'role' => 'required',
         ]);
+        // bycript input password
         $request['password'] = bcrypt($request->password);
         Anggota::create($request->all());
         Alert::toast('Anggota '. $request->nama_anggota.' berhasil ditambah','success');
@@ -70,9 +71,12 @@ class AnggotaController extends Controller
             'divisi_id' => 'required',
             'role' => 'required',
         ]);
+        // Jika input password kosong
         if ($request->password == '') {
+            // hapus $request->password
             unset($request['password']);
         } else {
+            // ganti password dengan bcrypt
             $request['password'] = bcrypt($request->password);
         }
 
@@ -83,8 +87,12 @@ class AnggotaController extends Controller
 
     public function destroy($id)
     {
-        Anggota::findOrFail($id)->delete();
-        Alert::toast('Data anggota berhasil dihapus','success');
+        try{
+            Anggota::findOrFail($id)->delete();
+            Alert::toast('Data anggota berhasil dihapus','success');
+        } catch (\Throwable $th) {
+            Alert::toast('Data Anggota Gagal dihapus','error');
+        }
         return redirect()->route('anggota.index');
     }
 }

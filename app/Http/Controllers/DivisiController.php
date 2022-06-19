@@ -54,8 +54,12 @@ class DivisiController extends Controller
 
     public function destroy(Divisi $divisi)
     {
-        $divisi->delete();
-        Alert::toast('Divisi '. $divisi->nama_divisi.' berhasil dihapus','success');
+        try{
+            $divisi->delete();
+            Alert::toast('Divisi '. $divisi->nama_divisi.' berhasil dihapus','success');
+        } catch(\Throwable $th){
+            Alert::toast('Divisi '. $divisi->nama_divisi.' gagal dihapus','error');
+        }
         return redirect()->route('divisi.index');
     }
 }

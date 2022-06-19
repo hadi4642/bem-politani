@@ -52,6 +52,7 @@ class KegiatanController extends Controller
             'jumlah_peserta'=>'required',
         ]);
 
+        // Mulai Database Transaction
         DB::beginTransaction();
 
         try {
@@ -119,10 +120,12 @@ class KegiatanController extends Controller
                 }
             }
 
+            // Simpan Semua Query yang dilakukan setelah metode DB::transaction
             DB::commit();
             Alert::toast('Kegiatan '. $request->nama_kegiatan.' berhasil ditambah','success');
             return redirect()->route('kegiatan.index');
         } catch (\Exception $e) {
+            // Batalkan Semua Query yang dilakukan setelah metode DB::transaction
             DB::rollback();
             return redirect()->route('kegiatan.index')->with('error', 'Data gagal ditambahkan');
         }
@@ -172,6 +175,7 @@ class KegiatanController extends Controller
             'jumlah_peserta'=>'required',
         ]);
 
+        // Mulai Database Transaction
         DB::beginTransaction();
 
         try {
@@ -263,11 +267,13 @@ class KegiatanController extends Controller
                 }
             }
 
+            // Simpan Semua Query yang dilakukan setelah metode DB::transaction
             DB::commit();
             Alert::toast('Kegiatan berhasil diedit','success');
             return redirect()->route('kegiatan.index');
 
         } catch (\Exception $e) {
+            // Batalkan Semua Query yang dilakukan setelah metode DB::transaction
             DB::rollback();
             return redirect()->route('kegiatan.index')->with('error', 'Data gagal diedit');
         }

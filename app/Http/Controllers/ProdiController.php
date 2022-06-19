@@ -12,7 +12,7 @@ class ProdiController extends Controller
     // Hanya role admin yang bisa mengakses halaman ini
     public function __construct()
     {
-        $this->middleware('admin')->only('create','edit', 'destroy');
+        $this->middleware('admin')->only('create', 'edit', 'destroy');
     }
 
     public function index()
@@ -55,8 +55,13 @@ class ProdiController extends Controller
 
     public function destroy(Prodi $prodi)
     {
-        $prodi->delete();
-        Alert::toast('Prodi '. $prodi->nama_prodi.' berhasil dihapus','success');
+        try {
+            $prodi->delete();
+            Alert::toast('Prodi '. $prodi->nama_prodi.' berhasil dihapus','success');
+        } catch (\Throwable $th) {
+            Alert::toast('Prodi '. $prodi->nama_prodi.' gagal dihapus','error');
+        }
         return redirect()->route('prodi.index');
+
     }
 }
